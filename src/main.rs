@@ -10,7 +10,7 @@ struct Contact {
 }
 
 impl Contact {
-    fn add_contact(name: String, phone_number: String, email: String) -> Self {
+    fn new(name: String, phone_number: String, email: String) -> Self {
         Self {
             name,
             phone_number,
@@ -18,39 +18,59 @@ impl Contact {
         }
     }
 
-    fn update_contact(&mut self, name: String, phone_number: String, email: String) {
+    fn update_contact(&mut self, name: String, phone_number: String, email: String) -> &mut Self {
         self.name = name;
         self.phone_number = phone_number;
         self.email = email;
+        self
+    }
+}
+
+struct ContactManager {
+    contacts: Vec<Contact>,
+}
+
+impl ContactManager {
+    fn new() -> Self {
+        Self {
+            contacts: Vec::new(),
+        }
     }
 
-    fn display_contacts(contacts: Vec<Self>) {
-        for contact in contacts {
-            println!("{contact:?}");
+    fn add_contact(&mut self, contact: Contact) {
+        self.contacts.push(contact);
+    }
+
+    fn display_contacts(&self) {
+        for contact in &self.contacts {
+            println!("{:?}", contact);
         }
     }
 }
 
 fn main() {
-    let mut contact = Contact::add_contact(
+    let mut manager = ContactManager::new();
+
+    let mut contact1 = Contact::new(
         String::from("Baris"),
         String::from("123"),
         String::from("test@test.com"),
     );
 
-    contact.update_contact(
+    contact1.update_contact(
         String::from("Ecem"),
         String::from("456"),
         String::from("ecem@test.com"),
     );
 
-    let contact2 = Contact::add_contact(
-        String::from("Baris"),
-        String::from("123"),
-        String::from("test@test.com"),
+    let contact2 = Contact::new(
+        String::from("Alex"),
+        String::from("789"),
+        String::from("alex@test.com"),
     );
 
-    let contacts = vec![contact, contact2];
+    manager.add_contact(contact1);
+    manager.add_contact(contact2);
 
-    Contact::display_contacts(contacts);
+    manager.display_contacts();
 }
